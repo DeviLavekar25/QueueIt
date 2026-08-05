@@ -1,4 +1,4 @@
-const {createQueue,getAllQueues,getQueueById, updateQueue, deleteQueue}= require("../services/queue.service");
+const {createQueue,getAllQueues,getQueueById, updateQueue, deleteQueue, joinQueue, serveNextToken, getQueueStatus}= require("../services/queue.service");
 const asyncHandler = require("../utils/asyncHandler");
 
 const create = asyncHandler(async(req,res)=>{
@@ -40,4 +40,31 @@ const remove = asyncHandler(async(req,res)=>{
     })
 })
 
-module.exports = {create,getAll, getById, update,remove};
+const join = asyncHandler(async(req,res)=>{
+    const result = await joinQueue(
+        req.params.id, req.user._id
+    );
+
+    res.status(200).json({
+        success:true,
+        message:"Succesfully joined queue.",
+        ...result,
+    });
+});
+
+const next = asyncHandler(async(req,res)=>{
+    const result = await serveNextToken(req.params.id);
+
+    res.status(200).json({
+        success:true, message:"Nexr customer served ",...result,
+    })
+})
+
+const getStatus = asyncHandler(async(req,res)=>{
+    const status = await getQueueStatus(req.params.id);
+    res.status(200).json({
+        success:true, data:status
+    })
+})
+
+module.exports = {create,getAll, getById, update,remove,join,next,getStatus};
