@@ -1,4 +1,4 @@
-const {createQueue,getAllQueues,getQueueById, updateQueue, deleteQueue, joinQueue, serveNextToken, getQueueStatus}= require("../services/queue.service");
+const {createQueue,getAllQueues,getQueueById, updateQueue, deleteQueue, joinQueue, serveNextToken, getQueueStatus, getQueueHistory}= require("../services/queue.service");
 const asyncHandler = require("../utils/asyncHandler");
 
 const create = asyncHandler(async(req,res)=>{
@@ -67,4 +67,11 @@ const getStatus = asyncHandler(async(req,res)=>{
     })
 })
 
-module.exports = {create,getAll, getById, update,remove,join,next,getStatus};
+const getHistory = asyncHandler(async(req,res)=>{
+    const history = await getQueueHistory(req.params.id);
+    res.status(200).json({
+        success:true, history,
+    })
+})
+
+module.exports = {create,getAll, getById, update,remove,join,next,getStatus,getHistory};

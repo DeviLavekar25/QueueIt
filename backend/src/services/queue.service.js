@@ -170,4 +170,17 @@ const getQueueStatus = async(queueId)=>{
     }
 }
 
-module.exports = {createQueue,getQueueById, getAllQueues, updateQueue, deleteQueue, joinQueue, serveNextToken,getQueueStatus};
+const getQueueHistory = async(queueId)=>{
+    const queue = await Queue.findById(queueId);
+    if(!queue){
+        throw new ApiError(404,"Queue not found")
+    }
+    const history = await QueueEntry.find({
+        queue:queueId
+    }).populate("user","name email").sort({
+        tokenNumber:1
+    })
+    return history;
+}
+
+module.exports = {createQueue,getQueueById, getAllQueues, updateQueue, deleteQueue, joinQueue, serveNextToken,getQueueStatus, getQueueHistory};
