@@ -2,6 +2,7 @@ const Queue = require("../models/queue.model")
 const Venue = require("../models/venue.model")
 const QueueEntry = require("../models/queueEntry.model")
 const ApiError = require("../utils/ApiError")
+const {getIO} = require("../sockets/socket")
 
 //reusable populate fucntion
 const queuePopulate={
@@ -141,6 +142,13 @@ const serveNextToken = async(queueId)=>{
 
     queue.currentToken = nextEntry.tokenNumber;
     await queue.save();
+
+    const io = getIO();
+    io.emit("queueUpdated",{
+        queueId:queue._id,
+        currentToken:queue.currentToken,
+        servedToken:nextEntry.tokenNumber
+    })
 
     return{
         servedToken:nextEntry.tokenNumber,

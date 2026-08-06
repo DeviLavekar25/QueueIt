@@ -3,6 +3,7 @@ const http = require("http");
 const app = require("./src/app");
 const connectDB = require("./src/config/db");
 const { Server } = require("socket.io");
+const {initializeSocket} = require("./src/sockets/socket")
 
 connectDB();
 
@@ -12,6 +13,8 @@ const io = new Server(server, {
         origin: "*"
     }
 });
+
+initializeSocket(io);
 
 io.on("connection", (socket) => {
     console.log("New Client Connected");
