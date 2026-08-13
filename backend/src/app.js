@@ -11,7 +11,10 @@ const errorHandler = require("./middleware/error.middleware");
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "https://queueit-dh5hkgvx6-devilavekar-7432s-projects.vercel.app"
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
