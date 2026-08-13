@@ -1,0 +1,79 @@
+.user-dashboard {
+  min-height: calc(100vh - 72px);
+  padding: 50px 30px;
+  background: #f8fafc;
+}
+
+.user-dashboard-header {
+  max-width: 900px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.user-dashboard-header h1 {
+  font-size: 38px;
+  color: #111827;
+  margin-bottom: 10px;
+}
+
+.user-dashboard-header p {
+  color: #6b7280;
+  font-size: 17px;
+}
+
+.category-grid {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.category-card {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.category-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.category-card h2 {
+  color: #111827;
+  margin-bottom: 10px;
+}
+
+.category-card p {
+  color: #6b7280;
+  line-height: 1.5;
+  min-height: 45px;
+}
+
+.category-link {
+  display: inline-block;
+  margin-top: 15px;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+@media (max-width: 800px) {
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 550px) {
+  .category-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .user-dashboard-header h1 {
+    font-size: 30px;
+  }
+}

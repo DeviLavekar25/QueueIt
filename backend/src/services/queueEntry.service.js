@@ -1,5 +1,7 @@
 const QueueEntry = require("../models/queueEntry.model");
 const ApiError = require("../utils/ApiError");
+const Queue = require("../models/queue.model")
+const {getIO} = require("../sockets/socket")
 
 const cancelQueueEntry = async(queueEntryId,userId)=>{
 
@@ -19,7 +21,48 @@ const cancelQueueEntry = async(queueEntryId,userId)=>{
 
     queueEntry.status="cancelled";
     await queueEntry.save();
+
+    const peopleWaiting = await QueueEntry.countDocuments({
+        queue:queueEntry.queue,
+        status:"waiting"
+    });
+
+    const queue = await Queue.findById(queueEntry.queue);
+    if(!queue){
+        throw new ApiError(404,"Queue not found");
+    }
+
+    const io = getIO();
+
+    io.to(`queue_${queue._id}`).emit("queueUpdated",{
+        queueId:queue._id,
+        currentToken:queue.currentToken,
+        lastToken:queue.lastToken,
+        peopleWaiting,
+    })
+
     return queueEntry;
 }
 
-module.exports = {cancelQueueEntry,};
+const getMyQueue = async(userId)=>{
+    const queueEntry = await QueueEntry.findOne({
+        user:userId,
+        status:"waiting",
+    })
+      .populate({
+        path:"queue",
+        populate:{
+            path:"venue",
+            select:"name address",
+        },
+      })
+      .sort({joinedAt:-1});
+
+      if(!queueEntry){
+        throw new ApiError(404,"You are not currently in any queue.")
+      }
+    return queueEntry;
+    
+}
+
+module.exports = {cancelQueueEntry,getMyQueue};

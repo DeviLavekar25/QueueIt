@@ -1,0 +1,130 @@
+.queues-page {
+  min-height: calc(100vh - 72px);
+  padding: 50px 30px;
+  background: #f8fafc;
+}
+
+.queues-header {
+  max-width: 900px;
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.queues-header h1 {
+  font-size: 38px;
+  color: #111827;
+  margin-bottom: 10px;
+}
+
+.queues-header p {
+  color: #6b7280;
+  font-size: 17px;
+}
+
+.queues-grid {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.queue-list-card {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.queue-list-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.queue-list-card h2 {
+  color: #111827;
+  margin-bottom: 20px;
+}
+
+.queue-list-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.queue-list-info > div {
+  padding: 14px;
+  background: #f9fafb;
+  border-radius: 10px;
+}
+
+.queue-list-info span {
+  display: block;
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.queue-list-info strong {
+  font-size: 22px;
+  color: #111827;
+}
+
+.queue-list-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.queue-list-status > span:first-child {
+  color: #6b7280;
+}
+
+.queue-status {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.queue-status.open {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.queue-status.closed {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.service-time {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.service-time strong {
+  color: #111827;
+}
+
+.queue-link {
+  display: inline-block;
+  margin-top: 15px;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+@media (max-width: 650px) {
+  .queues-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .queues-header h1 {
+    font-size: 30px;
+  }
+}

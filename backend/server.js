@@ -18,6 +18,23 @@ initializeSocket(io);
 
 io.on("connection", (socket) => {
     console.log("New Client Connected");
+
+     socket.on("joinQueue", (queueId) => {
+        socket.join(`queue_${queueId}`);
+
+        console.log(
+            `Socket ${socket.id} joined queue_${queueId}`
+        );
+    });
+
+    socket.on("leaveQueue", (queueId) => {
+        socket.leave(`queue_${queueId}`);
+
+        console.log(
+            `Socket ${socket.id} left queue_${queueId}`
+        );
+    });
+
     socket.on("disconnect", () => {
         console.log("Client Disconnected");
     });

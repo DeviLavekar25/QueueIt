@@ -34,7 +34,20 @@ const createQueue = async({venue, serviceName, estimatedServiceTime,})=>{
 const getAllQueues = async()=>{
     const queues = await Queue.find().populate(queuePopulate).sort({createdAt: -1});
 
-    return queues;
+    const queuesWithWaiting = await Promise.all(
+        queues.map(async(queue)=>{
+            const peopleWaiting = await QueueEntry.countDocuments({
+                queue:queue._id, status:"waiting",
+            });
+
+            return{
+                ...queue.toObject(),
+                peopleWaiting,
+            }
+        })
+    );
+
+    return queuesWithWaiting;
 }
 
 const getQueueById = async(id)=>{
@@ -103,7 +116,7 @@ const joinQueue = async(queueId, userId)=>{
         queue:queueId, user:userId, status:"waiting",
     })
     if(existingEntry){
-        throw new ApiEror(409,"You are already in this queue.")
+        throw new ApiError(409,"You are already in this queue.")
     }
 
     const tokenNumber = queue.lastToken + 1;
@@ -117,9 +130,23 @@ const joinQueue = async(queueId, userId)=>{
 
     const position = tokenNumber - queue.currentToken - 1;
     const estimatedWaitTime = position * queue.estimatedServiceTime;
+
+    const peopleWaiting = await QueueEntry.countDocuments({
+        queue:queueId, status:"waiting",
+    });
+
+    const io= getIO();
+
+    io.to(`queue_${queue._id}`).emit("queueUpdated", {
+        queueId:queue._id,
+        currentToken: queue.currentToken,
+        lastToken: queue.lastToken,
+        peopleWaiting,
+     })
+
     return{
         queueEntry, tokenNumber, position, estimatedWaitTime,
-    };
+    }
 }
 
 const serveNextToken = async(queueId)=>{
@@ -143,11 +170,18 @@ const serveNextToken = async(queueId)=>{
     queue.currentToken = nextEntry.tokenNumber;
     await queue.save();
 
+    const peopleWaiting = await QueueEntry.countDocuments({
+        queue:queueId,
+        status:"waiting"
+    })
+
     const io = getIO();
-    io.emit("queueUpdated",{
+    io.to(`queue_${queue._id}`).emit("queueUpdated",{
         queueId:queue._id,
         currentToken:queue.currentToken,
-        servedToken:nextEntry.tokenNumber
+        servedToken:nextEntry.tokenNumber,
+        lastToken:queue.lastToken,
+        peopleWaiting,
     })
 
     return{

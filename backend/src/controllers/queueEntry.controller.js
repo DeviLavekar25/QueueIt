@@ -1,5 +1,5 @@
 const asyncHandler = require("../utils/asyncHandler")
-const {cancelQueueEntry} = require("../services/queueEntry.service");
+const {cancelQueueEntry,getMyQueue} = require("../services/queueEntry.service");
 
 const cancel = asyncHandler(async(req,res)=>{
     const result = await cancelQueueEntry(req.params.id, req.user._id);
@@ -8,4 +8,11 @@ const cancel = asyncHandler(async(req,res)=>{
     })
 })
 
-module.exports = {cancel,}
+const myQueue = asyncHandler(async(req,res)=>{
+    const result = await getMyQueue(req.user._id);
+    res.status(200).json({
+        success:true, queueEntry:result,
+    })
+})
+
+module.exports = {cancel, myQueue}

@@ -1,0 +1,138 @@
+.my-queue-page {
+  min-height: 100vh;
+  padding: 40px 20px;
+  background: #f8fafc;
+}
+
+.my-queue-title {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #111827;
+}
+
+.my-queue-card {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 30px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.my-queue-card h2 {
+  margin-bottom: 5px;
+  color: #111827;
+}
+
+.venue-name {
+  color: #6b7280;
+  margin-bottom: 25px;
+}
+
+.my-token {
+  padding: 20px;
+  background: #f4f6fb;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.my-token span {
+  display: block;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.my-token strong {
+  display: block;
+  font-size: 48px;
+  margin-top: 5px;
+  color: #111827;
+}
+
+.queue-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.queue-stats > div {
+  padding: 15px;
+  background: #f9fafb;
+  border-radius: 10px;
+}
+
+.queue-stats span {
+  display: block;
+  color: #6b7280;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.queue-stats strong {
+  font-size: 20px;
+  color: #111827;
+}
+
+.my-status {
+  text-transform: uppercase;
+  font-size: 13px !important;
+  padding: 5px 10px;
+  border-radius: 15px;
+}
+
+.my-status.waiting {
+  background: #fef3c7;
+  color: #92400e !important;
+}
+
+.my-status.cancelled {
+  background: #fee2e2;
+  color: #991b1b !important;
+}
+
+.my-status.served {
+  background: #d1fae5;
+  color: #065f46 !important;
+}
+
+.cancel-button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #dc2626;
+  color: white;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.cancel-button:hover {
+  opacity: 0.9;
+}
+
+.cancel-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.joined-time {
+  margin-top: 20px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.status-container{
+    padding: 15px;
+    background: #f9fafb,
+    border-radius: 10px;
+    margin-bottom:25px;
+}
+
+.status-container > span {
+    display:block;
+    color:#6b7870;
+    font-size:13px;
+    margin-bottom:8px;
+}
