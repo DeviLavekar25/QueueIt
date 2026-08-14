@@ -2,24 +2,58 @@ import {useEffect, useState} from "react"
 import api from "../../api/axios"
 import socket from "../../socket"
 import "./Dashboard.css";
+import {useAuth} from "../../context/AuthContext"
 
 const Dashboard = () =>{
+  const {user}= useAuth();
+
   const [queues, setQueues] = useState([]);
   const [history, setHistory] = useState([]);
   const [selectedQueue, setSelectedQueue] = useState(null);
+  const [adminVenue, setAdminVenue] = useState(null);
 
   useEffect(()=>{
-    const fetchQueues = async() =>{
+    const fetchAdminQueues = async() =>{
       try{
-        const response = await api.get("/queues");
-        console.log("Admin Queues:", response.data);
-        setQueues(response.data.queues);
+        const venueResponse = await api.get("/venues");
+        console.log("Venues:", venueResponse.data);
+
+        const assignedVenue = venueResponse.data.venues.find(
+          (venue)=> venue.admins?.some(
+            (admin)=>
+            (admin._id || admin).toString() === user.id.toString()
+          )
+        );
+
+        if(!assignedVenue){
+          console.error("No venue assigned to this admin.");
+          setAdminVenue(null);
+          setQueues([]);
+          return;
+        }
+
+        console.log("Admin Venue:",assignedVenue);
+
+        setAdminVenue(assignedVenue);
+
+        const queueResponse = await api.get("/queues");
+        console.log("All queues: ",queueResponse.data);
+        const adminQueues = queueResponse.data.queues.filter(
+          (queue)=>
+            queue.venue?._id === assignedVenue._id
+        );
+        console.log("Admin Queues:", adminQueues);
+
+        setQueues(adminQueues);
       }catch(error){
-        console.error("Failed to fetch queues:", error.response?.data || error.message)
+        console.error("Failed to fetch admin queues:", error.response?.data || error.message)
       }
     }
-    fetchQueues();
-  },[]);
+    if(user?.id){
+       fetchAdminQueues();
+    }
+    
+  },[user]);
 
   useEffect(()=>{
     const handleQueueUpdate = (data)=>{
@@ -91,6 +125,12 @@ const Dashboard = () =>{
        <p className="dashboard-subtitle">
           Manage queues and monitor customers in real time.
        </p>
+
+       {adminVenue && (
+        <p className="admin-venue">
+            Managing: <strong>{adminVenue.name}</strong>
+        </p>
+       )}
 
       <div className="summary-container">
         <div className="summary-card">

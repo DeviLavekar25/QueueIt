@@ -12,6 +12,26 @@ const queuePopulate={
     },
 };
 
+const checkVenueAdmin = async (queueId, userId)=>{
+    const queue = await Queue.findById(queueId);
+    if(!queue){
+        throw new ApiError(404,"Queue not found")
+    }
+    const venue = await Venue.findById(queue.venue);
+    if(!venue){
+        throw new ApiError(404,"Venue not found");
+    }
+
+    const isAdmin = venue.admins.some(
+        (adminId) => adminId.toString() === userId.toString()
+    );
+
+    if(!isAdmin){
+        throw new ApiError(403,"You are not authorized to manage this venue's queue.")
+    }
+    return queue;
+}
+
 const createQueue = async({venue, serviceName, estimatedServiceTime,})=>{
     const existingVenue = await Venue.findById(venue);
     if(!existingVenue){
@@ -149,11 +169,13 @@ const joinQueue = async(queueId, userId)=>{
     }
 }
 
-const serveNextToken = async(queueId)=>{
-    const queue = await Queue.findById(queueId);
+const serveNextToken = async(queueId, userId)=>{
+    const queue = await checkVenueAdmin(queueId,userId);
+
     if(!queue){
         throw new ApiError(404,"Queue not found")
     };
+    
     const nextEntry = await QueueEntry.findOne({
         queue:queueId, status:"waiting"
     }).sort({tokenNumber:1,})

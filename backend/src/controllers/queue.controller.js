@@ -53,10 +53,10 @@ const join = asyncHandler(async(req,res)=>{
 });
 
 const next = asyncHandler(async(req,res)=>{
-    const result = await serveNextToken(req.params.id);
+    const result = await serveNextToken(req.params.id, req.user._id);
 
     res.status(200).json({
-        success:true, message:"Nexr customer served ",...result,
+        success:true, message:"Next customer served ",...result,
     })
 })
 
